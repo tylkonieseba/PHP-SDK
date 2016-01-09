@@ -29,12 +29,31 @@ $snr->transaction->addProduct(
 	'$sku'=>"ABCD44DFK-W21",
 	'$producer'=>"Mai Piu Senza",
 	'$name'=>"High heeled boots - nero",
-	'$regularPrice'=>"129,99€", 
-	'$discountPrice'=>"99,99€", // If product was sale in discount price
-	'$quantity'=>"1",
+	'$regularPrice'=>129.99, 
+	'$discountPrice'=>99.99, // If product has been sold in discount price
+	'$currency'=>"EUR", 
+	'$quantity'=>1,
 	'$discountCode'=>"WL2016",
 	'$location'=>"eCommerce",
-	'Size' => "39",
+	'Size' => 39,
+	'Color' => "Black",
+	]);
+
+
+// Remmove product to cart from category Women/Shoes/Boots
+$snr->transaction->removeProduct(
+	[
+	'$category'=>"She/Shoes/Boots",
+	'$sku'=>"ABCD44DFK-W21",
+	'$producer'=>"Mai Piu Senza",
+	'$name'=>"High heeled boots - nero",
+	'$regularPrice'=>129.99, 
+	'$discountPrice'=>99.99, // If product has been sold in discount price
+	'$currency'=>"EUR", 
+	'$quantity'=>1,
+	'$discountCode'=>"WL2016",
+	'$location'=>"eCommerce",
+	'Size' => 39,
 	'Color' => "Black",
 	]);
 
@@ -42,11 +61,43 @@ $snr->transaction->addProduct(
 // // Track charge
 $snr->transaction->charge(array(
 	'$orderId'=>"UK12345678",
-	'$totalAmount'=>"347,39€",
+	'$totalAmount'=>347.39,
+	'$discountAmount'=>347.39,
+	'$revenue'=>10.44,
+	'$currency'=>"EUR",
 	'$paymentType'=>"PayPal",
 	'$deliveryType'=>"UPS",
-	'$productsQuantity'=>"3",
-	
+	'$productsQuantity'=>2,
+	'$tax'=>23,
+	'products' => [
+		[
+			'$category'=>"She/Shoes/Boots",
+			'$sku'=>"ABCD44DFK-W21",
+			'$producer'=>"Mai Piu Senza",
+			'$name'=>"High heeled boots - nero",
+			'$regularPrice'=>129.99, 
+			'$discountPrice'=>99.99, // If product has been sold in discount price
+			'$currency'=>"EUR",
+			'$quantity'=>1,
+			'$discountCode'=>"WL2016",
+			'$location'=>"eCommerce",
+			'Size' => 39,
+			'Color' => "Black",
+		],[
+			'$category'=>"She/Shoes/Boots",
+			'$sku'=>"ABCD44DFK-W21",
+			'$producer'=>"Mai Piu Senza",
+			'$name'=>"High heeled boots - nero",
+			'$regularPrice'=>129.99, 
+			'$discountPrice'=>99.99, // If product has been sold in discount price
+			'$currency'=>"EUR",
+			'$quantity'=>1,
+			'$discountCode'=>"WL2016",
+			'$location'=>"eCommerce",
+			'Size' => 39,
+			'Color' => "Black",
+		],
+	],
 	'Order region'=>"Region #1",
 	'Order city'=>"Krakow"));
 
@@ -59,7 +110,7 @@ $snr->client->customIdentify('9876',array(
 	'$email'=>"john.smith@mail.com",
 	'$firstname'=>"John",
     '$secondname'=>"Smith",
-    '$age'=>"33",
+    '$age'=>33,
     'Client type'=>"Premium"
 ));
 

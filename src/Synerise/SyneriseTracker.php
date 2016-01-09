@@ -81,8 +81,6 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
     	$data['json'] = array_merge($this->event->getRequestQueue(), 
     		$this->transaction->getRequestQueue(), 
     		$this->client->getRequestQueue());
-
-		//$request = $this->createRequest('POST', "http://synerise-php-sdk:8080/server.php", $data);
         
         $options = $this->getDefaultOption();
         $apiKey = isset($options['headers']['Api-Key']) ? $options['headers']['Api-Key'] : '';
