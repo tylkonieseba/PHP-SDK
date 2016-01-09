@@ -14,7 +14,7 @@ You can get the library using Composer by including the following in your projec
         "synerise/php-sdk:: "2.0.*"
     }
 }
-```json
+```
 
 
 Now you can start tracking evetns, clients, payment and transactions:
