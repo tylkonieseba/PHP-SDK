@@ -1,9 +1,10 @@
 {
-    "name": "synerise/php-sdk-v2",
+    "name": "synerise/php-sdk",
+    "version": "2.0.1",
     "description": "Synerise SDK for PHP",
     "keywords": ["synerise", "sdk", "api"],
     "type": "library",
-    "homepage": "https://github.com/Synerise/php-sdk",
+    "homepage": "https://github.com/Synerise/PHP-SDK",
     "license": "Apache Version 2",
     "authors": [
         {
