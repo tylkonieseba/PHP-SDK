@@ -171,6 +171,7 @@ $snr->transaction->charge(array(
 	'Order city'=>"Krakow"));
 ```
 
+```php
 // Setup clinet with cutom itentify
 $snr->client->customIdentify('9876');
 
@@ -182,6 +183,7 @@ $snr->client->update(array(
     '$age'=>33,
     'Client type'=>"Premium"
 ));
+```
 
 ```php
 // Optional - clear all cache on Client
