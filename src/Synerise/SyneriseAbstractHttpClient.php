@@ -24,6 +24,18 @@ abstract class SyneriseAbstractHttpClient extends Client
     /** @var string */
     const BASE_URL = 'https://api.synerise.com';
 
+    /**
+     *
+     * @var bool
+     */
+    protected $_debug = false;
+
+    /**
+     *
+     * @var string
+     */
+    protected $_pathLog = '';
+
 
     /**
      * Configures the client by setting the appropriate headers, service description and error handling
@@ -86,6 +98,20 @@ abstract class SyneriseAbstractHttpClient extends Client
                 'User-Agent' => self::USER_AGENT,
             ]
         ];
+    }
+
+    /**
+     *  Logged data if _debug is true.
+     * @param $data
+     */
+    protected function _log($data) {
+        if($this->_debug) {
+            file_put_contents(
+                $this->_pathLog.'synerise_request.log',
+                print_r(str_repeat('-', 4).date ("Y-m-d H:i:s").str_repeat('-', 4)."\n".": ".(string)$data, true),
+                FILE_APPEND
+            );
+        }
     }
 
 }

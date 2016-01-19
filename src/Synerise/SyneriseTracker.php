@@ -42,6 +42,12 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
     public $transaction;
 
     /**
+     * An instance of the Product class (used for tracking purchase event)
+     * @var Producer\Product
+     */
+    public $product;
+
+    /**
      * Returns a singleton instance of SyneriseTracker
      * @param array $config
      * @return SyneriseTracker
@@ -63,11 +69,15 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
 			$config['handler'] = new ForkCurlHandler([]);
     	}
 
+        $this->_debug = !empty($config['debug'])?$config['debug']:false;
+        $this->_pathLog = !empty($config['pathLog'])?$config['pathLog']:false;
+
         parent::__construct($config);
 
 		$this->client = Producers\Client::getInstance();
 		$this->event = Event::getInstance();
 		$this->transaction = Producers\Transaction::getInstance();
+        $this->product = Producers\Product::getInstance();
 
     	$config = Collection::fromConfig($config, static::getDefaultConfig(), static::$required);
 		$this->configure($config);
@@ -78,18 +88,27 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
      * Flush the queue when we destruct the client with retries
      */
     public function __destruct() {
-    	$data['json'] = array_merge($this->event->getRequestQueue(), 
-    		$this->transaction->getRequestQueue(), 
-    		$this->client->getRequestQueue());
-        
+
+        $history = new History();
+        $this->getEmitter()->attach($history);
+
+        $data['json'] = array_merge($this->event->getRequestQueue(),
+            $this->transaction->getRequestQueue(),
+            $this->client->getRequestQueue());
+
         $options = $this->getDefaultOption();
         $apiKey = isset($options['headers']['Api-Key']) ? $options['headers']['Api-Key'] : '';
 
-        $request = $this->createRequest('POST', "https://tck.synerise.com/sdk-proxy/".$apiKey, $data);
+        $request = $this->createRequest('POST', "https://tck.synerise.com/sdk-proxy", $data);
         $request->setHeader('Content-Type','application/json');
 
-		$this->send($request);
-
-	}
+        try {
+            $this->send($request);
+            $this->_log($history);
+            //echo ($history);
+        } catch(\Exception $e) {
+            //echo ($history);
+        }
+    }
 
 }
