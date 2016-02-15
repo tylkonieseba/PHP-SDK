@@ -6,22 +6,11 @@ use Synerise\Producers\Client;
 use Synerise\Producers\Event;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Ring\Client\MockHandler;
+use GuzzleHttp\Subscriber\History;
 use Synerise\Consumer\ForkCurlHandler;
 
 class SyneriseTracker extends SyneriseAbstractHttpClient
 {
-
-    /** @var array The required config variables for this type of client */
-    private static $required = [
-        'apiKey',
-        'headers',
-    ];
-
-    /**
-     * An instance of the SyneriseTracker class (for singleton use)
-     * @var SyneriseTracker
-     */
-    private static $_instance;
 
     /**
      * An instance of the Client class (used to create/update client profiles)
@@ -41,23 +30,6 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
      */
     public $transaction;
 
-    /**
-     * An instance of the Product class (used for tracking purchase event)
-     * @var Producer\Product
-     */
-    public $product;
-
-    /**
-     * Returns a singleton instance of SyneriseTracker
-     * @param array $config
-     * @return SyneriseTracker
-     */
-    public static function getInstance($config = array()) {
-        if(!isset(self::$_instance)) {
-            self::$_instance = new SyneriseTracker($config);
-        }
-        return self::$_instance;
-    }
 
     /**
      * Instantiates a new SyneriseTracker instance.
@@ -69,15 +41,11 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
 			$config['handler'] = new ForkCurlHandler([]);
     	}
 
-        $this->_debug = !empty($config['debug'])?$config['debug']:false;
-        $this->_pathLog = !empty($config['pathLog'])?$config['pathLog']:false;
-
         parent::__construct($config);
 
 		$this->client = Producers\Client::getInstance();
 		$this->event = Event::getInstance();
 		$this->transaction = Producers\Transaction::getInstance();
-        $this->product = Producers\Product::getInstance();
 
     	$config = Collection::fromConfig($config, static::getDefaultConfig(), static::$required);
 		$this->configure($config);
@@ -88,27 +56,60 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
      * Flush the queue when we destruct the client with retries
      */
     public function __destruct() {
-
+        
         $history = new History();
         $this->getEmitter()->attach($history);
-
-        $data['json'] = array_merge($this->event->getRequestQueue(),
-            $this->transaction->getRequestQueue(),
-            $this->client->getRequestQueue());
-
-        $options = $this->getDefaultOption();
-        $apiKey = isset($options['headers']['Api-Key']) ? $options['headers']['Api-Key'] : '';
-
-        $request = $this->createRequest('POST', "https://tck.synerise.com/sdk-proxy", $data);
+        
+    	$data['json'] = array_merge($this->event->getRequestQueue(), 
+    		$this->transaction->getRequestQueue(), 
+    		$this->client->getRequestQueue());
+        
+        if(count($data['json']) == 0) {
+            return;
+        }
+        $request = $this->createRequest('POST', SyneriseAbstractHttpClient::BASE_TCK_URL, $data);
         $request->setHeader('Content-Type','application/json');
 
         try {
-            $this->send($request);
-            $this->_log($history);
-            //echo ($history);
+            $this->_log($request, 'TRACKER');
+            $response = $this->send($request);
+            $this->_log($response, 'TRACKER');
+
         } catch(\Exception $e) {
-            //echo ($history);
+
+            $this->_log($e->getMessage(), 'TRACKER_ERROR');
+
         }
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getSnrsParams()
+    {
+        $snrsP = isset($_COOKIE['_snrs_cl']) && !empty($_COOKIE['_snrs_cl'])?$_COOKIE['_snrs_cl']:false;
+        if ($snrsP) {
+            return $snrsP;
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets the default configuration options for the client
+     *
+     * @return array
+     */
+    public static function getDefaultConfig()
+    {
+        return [
+            'base_url' => self::BASE_TCK_URL,
+            'headers' => [
+                'Content-Type' => self::DEFAULT_CONTENT_TYPE,
+                'Accept' => self::DEFAULT_ACCEPT_HEADER,
+                'User-Agent' => self::USER_AGENT,
+            ]
+        ];
     }
 
 }

@@ -1,127 +1,96 @@
 <?php
 namespace Synerise;
 
-use GuzzleHttp\Collection;
+use Synerise\Exception\SyneriseException;
 use Synerise\Producers\Client;
 use Synerise\Producers\Event;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Ring\Client\MockHandler;
 use GuzzleHttp\Subscriber\History;
 use Synerise\Consumer\ForkCurlHandler;
+use GuzzleHttp\Message;
 
 class SyneriseCoupon extends SyneriseAbstractHttpClient
 {
 
-    /** @var array The required config variables for this type of client */
-    private static $required = [
-        'apiKey',
-        'headers',
-    ];
-
-    /**
-     * An instance of the SyneriseCoupon class (for singleton use)
-     * @var SyneriseTracker
-     */
-    private static $_instance;
-
-    /**
-     * Returns a singleton instance of SyneriseCoupon
-     * @param array $config
-     * @return SyneriseTracker
-     */
-    public static function getInstance($config = array()) {
-        if(!isset(self::$_instance)) {
-            self::$_instance = new SyneriseCoupon($config);
-        }
-        return self::$_instance;
-    }
-
-    /**
-     * Instantiates a new SyneriseCoupon instance.
-     * @param array $config
-     */
-    public function __construct($config = array()) {
-        parent::__construct($config);
-    	$config = Collection::fromConfig($config, static::getDefaultConfig(), static::$required);
-		$this->configure($config);
-    }
-
+    protected $_cache = array();
 
     /**
      * @param $token
      * @return Coupon
      * @throws SyneriseException
      */
-    public function getStatusCoupon($token) {
-        /**
-         * @var GuzzleHttp\Message\Response
-         */
-        $response = $this->sendSynerise($token, 'get');
+    public function getCoupon($token)
+    {
 
-        if($response->getStatusCode() == '200') {
-            $responseArray = $response->json();
-            return new Response\Coupon($responseArray['code'], $responseArray['message']);
+        try {
+            /**
+             * @var Response
+             */
+            //$response = $this->get(SyneriseAbstractHttpClient::BASE_API_URL . '/coupons/active/' . $token);
+            if (!isset($this->_cache[$token])) {
+                $request = $this->createRequest("GET", SyneriseAbstractHttpClient::BASE_API_URL . '/coupons/active/' . $token);
+                $this->_log($request, "Coupon");
+                $response = $this->send($request);
+
+                $this->_log($response, "Coupon");
+                $class = 'GuzzleHttp\\Message\\Response';
+                if ($response instanceof $class && $response->getStatusCode() == '200') {
+                    $this->_cache[$token] = new Response\Coupon($response->json());
+                } else {
+                    throw new SyneriseException('API Synerise not responsed 200.', SyneriseException::API_RESPONSE_ERROR);
+                }
+
+
+            }
+
+            return $this->_cache[$token];
+
+
+        } catch (\Exception $e) {
+            $this->_log($e->getMessage(), "CouponERROR");
+            throw $e;
         }
-        throw new SyneriseException('API Synerise not responsed 200.', 500);
+
     }
 
 
     /**
      * @param $token
-     * @return bool
+     * @return void
      * @throws SyneriseException
      *         code: 20105 - Coupon.Use.AlreadyUsed
      *         code: -1 - Coupon.UnknownError
      *         code: 500 - HTTP error
      */
-    public function useCoupon($token) {
-
-        $response = $this->sendSynerise($token, 'use');
-
-        if($response->getStatusCode() == '200') {
-            $responseArray = $response->json();
-            switch ( $responseArray['code']) {
-                case 1:
-                    return true;
-                case 20105:
-                    throw new SyneriseException('Coupon.Use.AlreadyUsed', 20105);
-                case 20101:
-                    throw new SyneriseException('Coupon.Use.NotFound', 20101);
-                default:
-                    throw new SyneriseException('Coupon.UnknownError', -1);
-            }
-        }
-        throw new SyneriseException('API Synerise not responsed 200.', 500);
-    }
-
-
-
-    /**
-     * Flush the queue when we destruct the client with retries
-     */
-    public function sendSynerise($token, $type) {
-
-        $history = new History();
-        $this->getEmitter()->attach($history);
-
-        switch ($type) {
-            case 'use':
-                $url = sprintf('coupons/active/%s/%s', $token, $type);
-                $method = 'POST';
-                break;
-            default:
-                $url = sprintf('coupons/active/%s', $token);
-                $method = 'GET';
-        }
-
-        $request = $this->createRequest($method, "https://api.synerise.com/".$url);
-
+    public function useCoupon($token)
+    {
         try {
-            $response =  $this->send($request);
-            $this->_log($history);
-            return $response;
-        } catch(\Exception $e) {
+            if (isset($this->_cache[$token])) {
+                unset($this->_cache[$token]);
+            }
 
+            $this->_log('USE '.$token, "Coupon");
+            $response = $this->post(SyneriseAbstractHttpClient::BASE_API_URL . "/coupons/active/$token/use");
+            $this->_log($response, "Coupon");
+            if ($response->getStatusCode() == '200') {
+                $responseArray = $response->json();
+                switch ($responseArray['code']) {
+                    case 1:
+                        return true;
+                    case 20105:
+                        throw new Exception\SyneriseException('Coupon.Use.AlreadyUsed', SyneriseException::COUPON_ALREADY_USED);
+                    case 20101:
+                        throw new Exception\SyneriseException('Coupon.Use.NotFound', SyneriseException::COUPON_NOT_FOUND);
+                    default:
+                        throw new Exception\SyneriseException('Coupon.UnknownError', SyneriseException::UNKNOWN_ERROR);
+                }
+            }
+            throw new Exception\SyneriseException('API Synerise not responsed 200.', 500);
+
+        } catch (\Exception $e) {
+            $this->_log($e->getMessage(), "CouponERROR");
+            throw $e;
         }
     }
 

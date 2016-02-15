@@ -5,10 +5,18 @@ use InvalidArgumentException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Event\ErrorEvent;
 use GuzzleHttp\Ring\Client\MockHandler;
+use GuzzleHttp\Collection;
 
 
 abstract class SyneriseAbstractHttpClient extends Client
 {
+
+    /** @var array The required config variables for this type of client */
+    public static $required = [
+        'apiKey',
+        'headers',
+    ];
+
     /** @var string */
     const DEFAULT_CONTENT_TYPE = 'application/x-www-form-urlencoded';
 
@@ -17,25 +25,49 @@ abstract class SyneriseAbstractHttpClient extends Client
 
     /** @var string */
     const USER_AGENT = 'synerise-php-sdk/2.1';
-    
+
     /** @var string */
     const DEFAULT_API_VERSION = '2.1';
 
     /** @var string */
-    const BASE_URL = 'https://api.synerise.com';
+    const BASE_API_URL = 'http://api.synerise.com';
+
+    /** @var string */
+    const BASE_TCK_URL = 'http://tck.synerise.com/sdk-proxy';
+
+
+    private static $_instances = array();
+
+    protected $_pathLog = '/var/log/synerise.log';
+
+    protected $_log = true;
+
 
     /**
-     *
-     * @var bool
+     * Returns a singleton instance of SyneriseAbstractHttpClient
+     * @param array $config
+     * @return SyneriseAbstractHttpClient
      */
-    protected $_debug = false;
+    public static function getInstance($config = array())
+    {
+        $class = get_called_class();
+
+        if (!isset(self::$_instances[$class])) {
+            self::$_instances[$class] = new $class($config);
+        }
+        return self::$_instances[$class];
+    }
 
     /**
-     *
-     * @var string
+     * Instantiates a new SyneriseCoupon instance.
+     * @param array $config
      */
-    protected $_pathLog = '';
-
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
+        $config = Collection::fromConfig($config, static::getDefaultConfig(), static::$required);
+        $this->configure($config);
+    }
 
     /**
      * Configures the client by setting the appropriate headers, service description and error handling
@@ -56,7 +88,7 @@ abstract class SyneriseAbstractHttpClient extends Client
     private function margeHeaders($config)
     {
         $default = $this->getDefaultConfig();
-        
+
         $apiVersion = $config->get('apiVersion');
         $configHeaders = $config->get('headers');
         $defaultHeaders = $default['headers'];
@@ -82,7 +114,7 @@ abstract class SyneriseAbstractHttpClient extends Client
         });
     }
 
-    
+
     /**
      * Gets the default configuration options for the client
      *
@@ -91,7 +123,7 @@ abstract class SyneriseAbstractHttpClient extends Client
     public static function getDefaultConfig()
     {
         return [
-            'base_url' => self::BASE_URL,
+            'base_url' => self::BASE_API_URL,
             'headers' => [
                 'Content-Type' => self::DEFAULT_CONTENT_TYPE,
                 'Accept' => self::DEFAULT_ACCEPT_HEADER,
@@ -100,17 +132,16 @@ abstract class SyneriseAbstractHttpClient extends Client
         ];
     }
 
-    /**
-     *  Logged data if _debug is true.
-     * @param $data
-     */
-    protected function _log($data) {
-        if($this->_debug) {
-            file_put_contents(
-                $this->_pathLog.'synerise_request.log',
-                print_r(str_repeat('-', 4).date ("Y-m-d H:i:s").str_repeat('-', 4)."\n".": ".(string)$data, true),
-                FILE_APPEND
-            );
+    public function setPathLog($pathFile)
+    {
+        $this->_pathLog = $pathFile;
+    }
+
+    public function _log($message, $tag)
+    {
+        if ($this->_log) {
+            file_put_contents($this->_pathLog, print_r("----------------\n" .
+                date("Y-m-d H:i:s") . " $tag: \n " . (string)$message . "\n", true), FILE_APPEND);
         }
     }
 
