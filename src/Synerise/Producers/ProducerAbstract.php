@@ -63,15 +63,56 @@ abstract class ProducerAbstract
         	$message['customIdentify'] =  Client::getInstance()->getCustomIdetify();
         }
 
+        $clientUUID = $this->getUuid();
+        if(!empty($clientUUID)) {
+            $message['uuid'] = $clientUUID;
+        }
+
+        $message['ip'] = $this->getIp();
+
         if(isset($message['params']['time']) && $this->_is_timestamp($message['params']['time'])){
-        	$message['time'] = date("Y-m-d\TH:i:sP",$message['params']['time']);
+//        	$message['time'] = date("Y-m-d\TH:i:sP",$message['params']['time']);
         } else if(isset($message['params']['time'])) {
             throw new SyneriseException('Parameter `time` have to be in timesamp format.');
         } else {
-        	$message['time'] = date("Y-m-d\TH:i:sP");
+        	$message['time'] = time() * 1000;
         }
 
         array_push($this->_requestQueue, $message);
+    }
+
+
+    /**
+     * @return string
+     */
+    private function getIp() {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+
+        return $ip;
+    }
+
+    /**
+     * @return bool|string
+     */
+    private function getUuid()
+    {
+        $snrsP = isset($_COOKIE['_snrs_p'])?$_COOKIE['_snrs_p']:false;
+        if ($snrsP) {
+            $snrsP = explode('&', $snrsP);
+            foreach ($snrsP as $snrs_part) {
+                if (strpos($snrs_part, 'uuid:') !== false) {
+                    return str_replace('uuid:', null, $snrs_part);
+                }
+            }
+        }
+
+        return false;
     }
 
     private function _is_timestamp($timestamp) {
