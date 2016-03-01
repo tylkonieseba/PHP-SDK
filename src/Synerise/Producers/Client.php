@@ -5,11 +5,12 @@ class Client extends ProducerAbstract
 {
     private $_customIdentify;
 
-    public function customIdentify($customIdentify, $data = array()) {
+    public function customIdentify($customIdentify) {
         $this->_customIdentify = $customIdentify;
-        if(!empty($data)){
-            $this->setData($data);
-        }
+    }
+
+    public function update($data = array()) {
+        $this->setData($data);
     }
 
     public function getCustomIdetify() {

@@ -23,7 +23,7 @@ $snr->event->track("Add to favourites 3", array(
     "Product Category"=>"Smartphones"));
 
 // Add product to cart from category Women/Shoes/Boots
-$snr->transaction->addProduct(
+$snr->product->add(
 	[
 	'$category'=>"She/Shoes/Boots",
 	'$sku'=>"ABCD44DFK-W21",
@@ -41,7 +41,7 @@ $snr->transaction->addProduct(
 
 
 // Remmove product to cart from category Women/Shoes/Boots
-$snr->transaction->removeProduct(
+$snr->product->remove(
 	[
 	'$category'=>"She/Shoes/Boots",
 	'$sku'=>"ABCD44DFK-W21",
@@ -105,8 +105,8 @@ $snr->transaction->charge(array(
 // Setup clinet with cutom itentify
 $snr->client->customIdentify('9876');
 
-// Setup clinet with cutom itentify and pass client data
-$snr->client->customIdentify('9876',array(
+// Update clinet
+$snr->client->update(array(
 	'$email'=>"john.smith@mail.com",
 	'$firstname'=>"John",
     '$secondname'=>"Smith",

@@ -92,7 +92,7 @@ The ecommerce category includes the following events:
 
 ```php
 // Add product to cart from category Women/Shoes/Boots
-$snr->transaction->addProduct(
+$snr->product->addProduct(
 	[
 	'$category'=>"She/Shoes/Boots",
 	'$sku'=>"ABCD44DFK-W21",
@@ -110,7 +110,7 @@ $snr->transaction->addProduct(
 
 
 // Remmove product to cart from category Women/Shoes/Boots
-$snr->transaction->removeProduct(
+$snr->product->removeProduct(
 	[
 	'$category'=>"She/Shoes/Boots",
 	'$sku'=>"ABCD44DFK-W21",
@@ -169,6 +169,20 @@ $snr->transaction->charge(array(
 	],
 	'Order region'=>"Region #1",
 	'Order city'=>"Krakow"));
+```
+
+```php
+// Setup clinet with cutom itentify
+$snr->client->customIdentify('9876');
+
+// Update clinet
+$snr->client->update(array(
+	'$email'=>"john.smith@mail.com",
+	'$firstname'=>"John",
+    '$secondname'=>"Smith",
+    '$age'=>33,
+    'Client type'=>"Premium"
+));
 ```
 
 ```php
