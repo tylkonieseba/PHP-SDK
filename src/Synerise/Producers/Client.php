@@ -9,6 +9,10 @@ class Client extends ProducerAbstract
         $this->_customIdentify = $customIdentify;
     }
 
+    public function setUuid($uuid) {
+        $this->_uuid = $uuid;
+    }
+
     public function update($data = array()) {
         $this->setData($data);
     }
@@ -20,6 +24,16 @@ class Client extends ProducerAbstract
     public function setData($params = array()) {
         $data['params'] = $params;
         $data['object']= 'client.data'; 
+        $this->enqueue($data);
+    }
+
+    public function logIn() {
+        $data['object'] = 'client.logIn';
+        $this->enqueue($data);
+    }
+
+    public function logOut() {
+        $data['object'] = 'client.logOut';
         $this->enqueue($data);
     }
 

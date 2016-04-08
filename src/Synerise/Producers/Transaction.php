@@ -16,6 +16,12 @@ class Transaction extends ProducerAbstract
         $this->enqueue($data);
     }
 
+    public function addFavoriteProduct($params = array()) {
+        $data['params'] = $params;
+        $data['object'] = 'product.addToFavorite';
+        $this->enqueue($data);
+    }
+
 
     public function charge($params = array()) {
         $data['params'] = $params;
