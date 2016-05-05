@@ -5,13 +5,17 @@ class Client extends ProducerAbstract
 {
     private $_customIdentify;
 
-    public function customIdentify($customIdentify) {
+    public function customIdentify($customIdentify, $dataUser = null) {
         $this->_customIdentify = $customIdentify;
+        if($dataUser) {
+            $this->setData($dataUser);
+        }
     }
 
     public function setUuid($uuid) {
         $this->_uuid = $uuid;
     }
+
 
     public function update($data = array()) {
         $this->setData($data);

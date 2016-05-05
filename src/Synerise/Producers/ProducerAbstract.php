@@ -145,6 +145,9 @@ abstract class ProducerAbstract
      */
     private function getUuid()
     {
+        if($this->_uuid) {
+            return $this->_uuid;
+        }
 
         $snrsP = isset($_COOKIE['_snrs_p'])?$_COOKIE['_snrs_p']:false;
         if ($snrsP) {
@@ -164,6 +167,9 @@ abstract class ProducerAbstract
      */
     private function getSsuid()
     {
+        if($this->_uuid) {
+            return $this->_uuid;
+        }
 
         $snrsS = isset($_COOKIE['_snrs_sa'])?$_COOKIE['_snrs_sa']:false;
         if ($snrsS) {
