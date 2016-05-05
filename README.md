@@ -132,10 +132,10 @@ $this->snr->client->setData(
 );
 
 // Log In
-$this->snr->client->logIn();
+$snr->client->logIn();
 
 // Log Out
-$this->snr->client->logOut();
+$snr->client->logOut();
 
 
 // Optional - clear all cache on Client
