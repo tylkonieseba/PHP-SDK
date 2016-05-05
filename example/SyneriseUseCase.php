@@ -18,12 +18,12 @@ $snr->event->track("Custom event", array(
 //Add product to favorite
 $snr->transaction->addFavoriteProduct(
 	[
-		"$categories" => ["1", "2", "3", "czółenka"],
+		"$categories" => ["1", "2", "3", "apple"],
 		"$sku" => "DCF756-H25-4300-5300-0",
 		"$finalUnitPrice" => 24.99,
-		"$name" => "Czytelna nazwa produktu - może pojawić się na streamie",
-		"$imageUrl" => "Adres obrazka do wyświetlenia na streamie",
-		"$url" => "Adres strony z widokiem produktu - na streamie zostanie podlinkowany",
+		"$name" => "Apple MacBook Pro 13",
+		"$imageUrl" => "https://example/image.jpg",
+		"$url" => "https://example.com/apple-macbook-pro-13",
 		"$quantity" => 2
 	]
 );
@@ -32,7 +32,7 @@ $snr->transaction->addFavoriteProduct(
 // Add product to cart from category Women/Shoes/Boots
 $snr->transaction->addProduct(
 	[
-		"$categories" => ["1", "2", "3", "czółenka"],
+		"$categories" => ["1", "2", "3", "apple"],
 		"$sku" => "DCF756-H25-4300-5300-0",
 		"$finalUnitPrice" => 24.99,
 		"$name" => "Apple MacBook Pro 13",
@@ -44,12 +44,12 @@ $snr->transaction->addProduct(
 // Remmove product to cart from category Women/Shoes/Boots
 $snr->transaction->removeProduct(
 	[
-		"$categories" => ["1", "2", "3", "czółenka"],
+		"$categories" => ["1", "2", "3", "apple"],
 		"$sku" => "DCF756-H25-4300-5300-0",
 		"$finalUnitPrice" => 24.99,
-		"$name" => "Czytelna nazwa produktu - może pojawić się na streamie",
-		"$imageUrl" => "Adres obrazka do wyświetlenia na streamie",
-		"$url" => "Adres strony z widokiem produktu - na streamie zostanie podlinkowany",
+		"$name" => "Apple MacBook Pro 13",
+		"$imageUrl" => "https://example/image.jpg",
+		"$url" => "https://example.com/apple-macbook-pro-13",
 	]);
 
 
@@ -65,21 +65,21 @@ $snr->transaction->charge([
 	"$orderId" => "3DD33333333",
 	"products" => [
 		[
-			"$categories" => ["1", "2", "3", "czółenka"],
+			"$categories" => ["1", "2", "3", "apple"],
 			"$sku" => "DCF756-H25-4300-5300-0",
 			"$finalUnitPrice" => 24.99,
-			"$name" => "Czytelna nazwa produktu - może pojawić się na streamie",
-			"$imageUrl" => "Adres obrazka do wyświetlenia na streamie",
-			"$url" => "Adres strony z widokiem produktu - na streamie zostanie podlinkowany",
+			"$name" => "Apple MacBook Pro 13",
+			"$imageUrl" => "https://example/image.jpg",
+			"$url" => "https://example.com/apple-macbook-pro-13",
 			"$quantity" => 2
 		],
 		[
-			"$categories" => ["1", "2", "3", "czółenka"],
-			"$sku" => "YHW2-125-9900-5300-0",
-			"$finalUnitPrice" => 84.99,
-			"$name" => "Czytelna nazwa produktu - może pojawić się na streamie",
-			"$imageUrl" => "Adres obrazka do wyświetlenia na streamie",
-			"$url" => "Adres strony z widokiem produktu - na streamie zostanie podlinkowany",
+			"$categories" => ["1", "2", "3", "apple"],
+			"$sku" => "TANW2-H25-4300-5300-0",
+			"$finalUnitPrice" => 24.99,
+			"$name" => "Apple MacBook Pro 19",
+			"$imageUrl" => "https://example/image.jpg",
+			"$url" => "https://example.com/apple-macbook-pro-19",
 			"$quantity" => 2
 		]
 	]
@@ -104,7 +104,8 @@ $this->snr->client->setData(
 		'$email' => "john.smith@mail.com",
 		'$firstname' => "John",
 		'$secondname' => "Smith",
-		'$age' => 33
+		'$age' => 33,
+		'Client type' => "Premium"
 	]
 );
 
