@@ -56,13 +56,16 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
      * Flush the queue when we destruct the client with retries
      */
     public function __destruct() {
-        
+        $this->sendQueue();
+    }
+
+    public function sendQueue(){
         $history = new History();
         $this->getEmitter()->attach($history);
-        
-    	$data['json'] = array_merge($this->event->getRequestQueue(), 
-    		$this->transaction->getRequestQueue(), 
-    		$this->client->getRequestQueue());
+
+        $data['json'] = array_merge($this->event->getRequestQueue(),
+                $this->transaction->getRequestQueue(),
+                $this->client->getRequestQueue());
         
         if(count($data['json']) == 0) {
             return;
@@ -76,10 +79,21 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
             $this->_log($response, 'TRACKER');
 
         } catch(\Exception $e) {
-
             $this->_log($e->getMessage(), 'TRACKER_ERROR');
-
         }
+
+        $this->flushQueue();
+
+        if(isset($response) && $response->getStatusCode() == '200') {
+            return true;
+        }
+        return false;
+    }
+
+    public function flushQueue() {
+        $this->event->reset();
+        $this->transaction->reset();
+        $this->client->reset();
     }
 
     /**
@@ -94,6 +108,7 @@ class SyneriseTracker extends SyneriseAbstractHttpClient
 
         return false;
     }
+
 
     /**
      * Gets the default configuration options for the client
