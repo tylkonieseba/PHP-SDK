@@ -11,20 +11,20 @@ $snr = Synerise\SyneriseTracker::getInstance([
 $snr->client->customIdentify('1');
 
 // Track an custom event
-$snr->event->track("Custom event", array(
-	"Product Name" => "iPhone 6",
-	"Product Category" => "Smartphones"));
+$snr->event->track('Custom event', array(
+	'Product Name' => 'iPhone 6',
+	'Product Category' => 'Smartphones'));
 
 //Add product to favorite
 $snr->transaction->addFavoriteProduct(
 	[
-		"$categories" => ["1", "2", "3", "apple"],
-		"$sku" => "DCF756-H25-4300-5300-0",
-		"$finalUnitPrice" => 24.99,
-		"$name" => "Apple MacBook Pro 13",
-		"$imageUrl" => "https://example/image.jpg",
-		"$url" => "https://example.com/apple-macbook-pro-13",
-		"$quantity" => 2
+		'$categories' => ['1', '2', '3', 'apple'],
+		'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+		'$finalUnitPrice' => 24.99,
+		'$name' => 'Apple MacBook Pro 13',
+		'$imageUrl' => 'https://example/image.jpg',
+		'$url' => 'https://example.com/apple-macbook-pro-13',
+		'$quantity' => 2
 	]
 );
 
@@ -32,55 +32,55 @@ $snr->transaction->addFavoriteProduct(
 // Add product to cart from category Women/Shoes/Boots
 $snr->transaction->addProduct(
 	[
-		"$categories" => ["1", "2", "3", "apple"],
-		"$sku" => "DCF756-H25-4300-5300-0",
-		"$finalUnitPrice" => 24.99,
-		"$name" => "Apple MacBook Pro 13",
-		"$imageUrl" => "https://example/image.jpg",
-		"$url" => "https://example.com/apple-macbook-pro-13",
+		'$categories' => ['1', '2', '3', 'apple'],
+		'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+		'$finalUnitPrice' => 24.99,
+		'$name' => 'Apple MacBook Pro 13',
+		'$imageUrl' => 'https://example/image.jpg',
+		'$url' => 'https://example.com/apple-macbook-pro-13',
 	]);
 
 
 // Remmove product to cart from category Women/Shoes/Boots
 $snr->transaction->removeProduct(
 	[
-		"$categories" => ["1", "2", "3", "apple"],
-		"$sku" => "DCF756-H25-4300-5300-0",
-		"$finalUnitPrice" => 24.99,
-		"$name" => "Apple MacBook Pro 13",
-		"$imageUrl" => "https://example/image.jpg",
-		"$url" => "https://example.com/apple-macbook-pro-13",
+		'$categories' => ['1', '2', '3', 'apple'],
+		'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+		'$finalUnitPrice' => 24.99,
+		'$name' => 'Apple MacBook Pro 13',
+		'$imageUrl' => 'https://example/image.jpg',
+		'$url' => 'https://example.com/apple-macbook-pro-13',
 	]);
 
 
 // Track charge
 $snr->transaction->charge([
-	"$source" => "POS",
-	"$totalAmount" => 120.54,
-	"$discountAmount" => 22.33,
-	"$revenue" => 3.44,
-	"$discountCode" => "WL2016",
-	"$locationId" => "C.H. Bonarka CC",
-	"$currency" => "PLN",
-	"$orderId" => "3DD33333333",
-	"products" => [
+	'$source' => 'POS',
+	'$totalAmount' => 120.54,
+	'$discountAmount' => 22.33,
+	'$revenue' => 3.44,
+	'$discountCode' => 'WL2016',
+	'$locationId' => 'C.H. Bonarka CC',
+	'$currency' => 'PLN',
+	'$orderId' => '3DD33333333',
+	'products' => [
 		[
-			"$categories" => ["1", "2", "3", "apple"],
-			"$sku" => "DCF756-H25-4300-5300-0",
-			"$finalUnitPrice" => 24.99,
-			"$name" => "Apple MacBook Pro 13",
-			"$imageUrl" => "https://example/image.jpg",
-			"$url" => "https://example.com/apple-macbook-pro-13",
-			"$quantity" => 2
+			'$categories' => ['1', '2', '3', 'apple'],
+			'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+			'$finalUnitPrice' => 24.99,
+			'$name' => 'Apple MacBook Pro 13',
+			'$imageUrl' => 'https://example/image.jpg',
+			'$url' => 'https://example.com/apple-macbook-pro-13',
+			'$quantity' => 2
 		],
 		[
-			"$categories" => ["1", "2", "3", "apple"],
-			"$sku" => "TANW2-H25-4300-5300-0",
-			"$finalUnitPrice" => 24.99,
-			"$name" => "Apple MacBook Pro 19",
-			"$imageUrl" => "https://example/image.jpg",
-			"$url" => "https://example.com/apple-macbook-pro-19",
-			"$quantity" => 2
+			'$categories' => ['1', '2', '3', 'apple'],
+			'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+			'$finalUnitPrice' => 24.99,
+			'$name' => 'Apple MacBook Pro 19',
+			'$imageUrl' => 'https://example/image.jpg',
+			'$url' => 'https://example.com/apple-macbook-pro-19',
+			'$quantity' => 2
 		]
 	]
 ]);
@@ -91,28 +91,28 @@ $snr->client->customIdentify('9876');
 
 // Setup clinet with cutom itentify and pass client data
 $snr->client->customIdentify('9876', array(
-	'$email' => "john.smith@mail.com",
-	'$firstname' => "John",
-	'$secondname' => "Smith",
+	'$email' => 'john.smith@mail.com',
+	'$firstname' => 'John',
+	'$lastname' => 'Smith',
 	'$age' => 33,
-	'Client type' => "Premium"
+	'Client type' => 'Premium'
 ));
 
 //add or update user
 $this->snr->client->setData(
 	[
-		'$email' => "john.smith@mail.com",
-		'$firstname' => "John",
-		'$secondname' => "Smith",
+		'$email' => 'john.smith@mail.com',
+		'$firstname' => 'John',
+		'$lastname' => 'Smith',
 		'$age' => 33,
-		'Client type' => "Premium"
+		'Client type' => 'Premium'
 	]
 );
 
-// Log In
+// Event log In
 $snr->client->logIn();
 
-// Log Out
+// Event log out
 $snr->client->logOut();
 
 
