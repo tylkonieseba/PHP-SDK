@@ -11,7 +11,7 @@ You can get the library using Composer by including the following in your projec
 ```json
 {
     "require": {
-        "synerise/php-sdk": "2.0.1"
+        "synerise/php-sdk": "2.1.0"
     }
 }
 ```
@@ -25,121 +25,123 @@ Now you can start tracking evetns, clients, payment and transactions:
 require 'vendor/autoload.php';
 
 $snr = Synerise\SyneriseTracker::getInstance([
-	'apiKey'=>'b43c7c2c-ee52-4051-afa8-073e9c9c5f84',
-	'apiVersion'=>'2.1.0',
-	'allowFork'=>true,
-	]);
+	'apiKey' => 'b43c7c2c-ee52-4051-afa8-073e9c9c5f84',
+	'apiVersion' => '2.1.0',
+	'allowFork' => true,
+]);
 
 $snr->client->customIdentify('1');
 
 // Track an custom event
-$snr->event->track("Custom event", array(
-	"Product Name"=>"iPhone 6",
-    "Product Category"=>"Smartphones"));
+$snr->event->track('Custom event', array(
+	'Product Name' => 'iPhone 6',
+	'Product Category' => 'Smartphones'));
 
 //Add product to favorite
 $snr->transaction->addFavoriteProduct(
-        [
-        "$categories": ["1", "2", "3", "apple"],
-        "$sku": "DCF756-H25-4300-5300-0",
-        "$finalUnitPrice": 24.99,
-        "$name": "Apple MacBook Pro 13",
-        "$imageUrl": "https://example/image.jpg",
-        "$url": "https://example.com/apple-macbook-pro-13",
-        "$quantity": 2
-        ]
-    );
-
+	[
+		'$categories' => ['1', '2', '3', 'apple'],
+		'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+		'$finalUnitPrice' => 24.99,
+		'$name' => 'Apple MacBook Pro 13',
+		'$imageUrl' => 'https://example/image.jpg',
+		'$url' => 'https://example.com/apple-macbook-pro-13',
+		'$quantity' => 2
+	]
+);
 
 
 // Add product to cart from category Women/Shoes/Boots
 $snr->transaction->addProduct(
 	[
-	"$sku": "DCF756-H25-4300-5300-0",
-	"$categories": ["1", "2", "3", "apple"],
-    "$finalUnitPrice": 24.99,
-    "$name": "Apple MacBook Pro 13",
-    "$imageUrl": "https://example/image.jpg",
-    "$url": "https://example.com/apple-macbook-pro-13",
+		'$categories' => ['1', '2', '3', 'apple'],
+		'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+		'$finalUnitPrice' => 24.99,
+		'$name' => 'Apple MacBook Pro 13',
+		'$imageUrl' => 'https://example/image.jpg',
+		'$url' => 'https://example.com/apple-macbook-pro-13',
 	]);
 
 
 // Remmove product to cart from category Women/Shoes/Boots
 $snr->transaction->removeProduct(
 	[
-	"$sku": "DCF756-H25-4300-5300-0",
-	"$categories": ["1", "2", "3", "apple"],
-    "$finalUnitPrice": 24.99,
-    "$name": "Apple MacBook Pro 13",
-    "$imageUrl": "https://example/image.jpg",
-    "$url": "https://example.com/apple-macbook-pro-13",
+		'$categories' => ['1', '2', '3', 'apple'],
+		'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+		'$finalUnitPrice' => 24.99,
+		'$name' => 'Apple MacBook Pro 13',
+		'$imageUrl' => 'https://example/image.jpg',
+		'$url' => 'https://example.com/apple-macbook-pro-13',
 	]);
 
 
 // Track charge
-$snr->transaction->charge(array(
-    "$source":"POS",
-    "$totalAmount":120.54,
-    "$discountAmount:22.33,
-    "$revenue": 3.44,
-    "$discountCode":"WL2016",
-    "$locationId":"C.H. Bonarka CC",
-    "$currency":"PLN",
-    "$orderId":"3DD33333333",
-	"products":  [
-		{
-		"$sku": "DCF756-H25-4300-5300-0",
-        "$categories": ["1", "2", "3", "apple"],
-        "$finalUnitPrice": 24.99,
-        "$name": "Apple MacBook Pro 13",
-        "$imageUrl": "https://example/image.jpg",
-        "$url": "https://example.com/apple-macbook-pro-13",
-		"$quantity": 2
-		},
-		{
-        "$sku": "LENO-H25-222-5300-0",
-        "$categories": ["1", "2", "3", "lenovo"],
-        "$finalUnitPrice": 24.99,
-        "$name": "lenovo",
-        "$imageUrl": "https://example/lenovo.jpg",
-        "$url": "https://example.com/lenovo",
-        "$quantity": 2
-        }
-    ]
-	));
+$snr->transaction->charge([
+	'$source' => 'POS',
+	'$totalAmount' => 120.54,
+	'$discountAmount' => 22.33,
+	'$revenue' => 3.44,
+	'$discountCode' => 'WL2016',
+	'$locationId' => 'C.H. Bonarka CC',
+	'$currency' => 'PLN',
+	'$orderId' => '3DD33333333',
+	'products' => [
+		[
+			'$categories' => ['1', '2', '3', 'apple'],
+			'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+			'$finalUnitPrice' => 24.99,
+			'$name' => 'Apple MacBook Pro 13',
+			'$imageUrl' => 'https://example/image.jpg',
+			'$url' => 'https://example.com/apple-macbook-pro-13',
+			'$quantity' => 2
+		],
+		[
+			'$categories' => ['1', '2', '3', 'apple'],
+			'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
+			'$finalUnitPrice' => 24.99,
+			'$name' => 'Apple MacBook Pro 19',
+			'$imageUrl' => 'https://example/image.jpg',
+			'$url' => 'https://example.com/apple-macbook-pro-19',
+			'$quantity' => 2
+		]
+	]
+]);
 
 
 // Setup clinet with cutom itentify
 $snr->client->customIdentify('9876');
 
 // Setup clinet with cutom itentify and pass client data
-$snr->client->customIdentify('9876',array(
-	'$email'=>"john.smith@mail.com",
-	'$firstname'=>"John",
-    '$secondname'=>"Smith",
-    '$age'=>33,
-    'Client type'=>"Premium"
+$snr->client->customIdentify('9876', array(
+	'$email' => 'john.smith@mail.com',
+	'$firstname' => 'John',
+	'$lastname' => 'Smith',
+	'$age' => 33,
+	'Client type' => 'Premium'
 ));
 
 //add or update user
 $this->snr->client->setData(
-[
-    '$email'=>"john.smith@mail.com",
- 	'$firstname'=>"John",
-    '$secondname'=>"Smith",
-    '$age'=>33
- ]
+	[
+		'$email' => 'john.smith@mail.com',
+		'$firstname' => 'John',
+		'$lastname' => 'Smith',
+		'$age' => 33,
+		'Client type' => 'Premium'
+	]
 );
 
-// Log In
+// Event log In
 $snr->client->logIn();
 
-// Log Out
+// Event log out
 $snr->client->logOut();
 
 
 // Optional - clear all cache on Client
 $snr->client->reset();
+
+
 
 ```
 

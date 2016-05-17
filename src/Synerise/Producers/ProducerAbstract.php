@@ -61,7 +61,7 @@ abstract class ProducerAbstract
      */
     public function enqueue($message = array()) {
         if(!empty(Client::getInstance()->getCustomIdetify())){
-        	$message['customIdentify'] =  Client::getInstance()->getCustomIdetify();
+        	$message['clientCustomId'] =  Client::getInstance()->getCustomIdetify();
         }
 
 
