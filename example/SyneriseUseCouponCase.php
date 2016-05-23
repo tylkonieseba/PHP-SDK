@@ -3,7 +3,7 @@ require '../vendor/autoload.php';
 
 $snr = Synerise\SyneriseCoupon::getInstance([
 	'apiKey'=>'2A3C3B02-04BE-03A0-6E22-E7B91CA41479',
-	'apiVersion'=>'2.0',
+	'apiVersion'=>'2.1.0',
 	'allowFork'=>false, //true,
 ]);
 
