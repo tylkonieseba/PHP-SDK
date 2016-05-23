@@ -26,6 +26,11 @@ class SyneriseNewsletter extends SyneriseAbstractHttpClient
     {
 
         try {
+
+            if(!empty($this->getUuid())){
+                $additionalParams['uuid'] = $this->getUuid();
+            }
+
             /**
              * @var Response
              */
