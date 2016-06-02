@@ -143,7 +143,7 @@ abstract class ProducerAbstract
     /**
      * @return bool|string
      */
-    private function getUuid()
+    protected function getUuid()
     {
         if($this->_uuid) {
             return $this->_uuid;
