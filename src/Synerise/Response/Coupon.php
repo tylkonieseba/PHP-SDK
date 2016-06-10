@@ -4,13 +4,13 @@ namespace Synerise\Response;
 class Coupon
 {
 
-    /**Ważność kuponu
+    /** Coupon value
      * @var int
      */
     private $_status = false;
 
     /**
-     *  Typ zniżki
+     *  Discount type
      * @var string "percent", "cost"
      */
     private $_discount = null;
@@ -22,7 +22,7 @@ class Coupon
     private $_redeemedAt = null;
 
     /**
-     * Wartość zniżki
+     * Discount value
      *
      * @var float
      */

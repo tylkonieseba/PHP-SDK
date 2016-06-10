@@ -75,9 +75,9 @@ $snr->transaction->removeProduct(
 	]);
 
 
-// Track charge
+// Track charge 
 $snr->transaction->charge([
-	'$source' => 'POS',
+	'$source' => 'POS',  // Avaiable options: WEB_DESKTOP, WEB_MOBILE, MOBILE_APP, POS
 	'$totalAmount' => 120.54,
 	'$discountAmount' => 22.33,
 	'$revenue' => 3.44,
@@ -85,7 +85,7 @@ $snr->transaction->charge([
 	'$locationId' => 'C.H. Bonarka CC',
 	'$currency' => 'PLN',
 	'$orderId' => '3DD33333333',
-	'products' => [
+	'$products' => [
 		[
 			'$categories' => ['1', '2', '3', 'apple'],
 			'$sku' => 'XYZ-XYZ-XYZ-XYZ-XYZ',
