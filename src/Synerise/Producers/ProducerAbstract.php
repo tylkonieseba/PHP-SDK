@@ -69,7 +69,7 @@ abstract class ProducerAbstract
             $message['uuid'] =  Client::getInstance()->getUuid();
         }
 
-        if(!$message['uuid']) {
+        if(isset($message['uuid']) && !$message['uuid']) {
             $clientUUID = $this->getUuid();
             if(!empty($clientUUID)) {
                 $message['uuid'] = $clientUUID;
@@ -107,8 +107,10 @@ abstract class ProducerAbstract
             $ip = $_SERVER['HTTP_CLIENT_IP'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
+        } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
             $ip = $_SERVER['REMOTE_ADDR'];
+        } else {
+            return '0.0.0.0';
         }
 
         return $ip;
@@ -143,7 +145,7 @@ abstract class ProducerAbstract
     /**
      * @return bool|string
      */
-    protected function getUuid()
+    public function getUuid()
     {
         if($this->_uuid) {
             return $this->_uuid;
