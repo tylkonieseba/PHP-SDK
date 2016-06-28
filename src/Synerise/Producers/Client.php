@@ -11,7 +11,7 @@ class Client extends ProducerAbstract
     public function customIdentify($customIdentify, $dataUser = null) {
         $this->_customIdentify = $customIdentify;
         if($dataUser) {
-            $this->setData(s);
+            $this->setData($dataUser);
         }
     }
 
