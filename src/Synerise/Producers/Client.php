@@ -5,10 +5,13 @@ class Client extends ProducerAbstract
 {
     private $_customIdentify;
 
+    private $_email;
+
+
     public function customIdentify($customIdentify, $dataUser = null) {
         $this->_customIdentify = $customIdentify;
         if($dataUser) {
-            $this->setData($dataUser);
+            $this->setData(s);
         }
     }
 
@@ -24,7 +27,16 @@ class Client extends ProducerAbstract
         return $this->_customIdentify;    
     }
 
+    public function getEmail() {
+        return $this->_email;
+    }
+
     public function setData($params = array()) {
+
+        if(isset($params['$email'])) {
+            $this->_email = $params['$email'];
+        }
+
         $data['params'] = $params;
         $data['type']= 'client.data';
         $this->enqueue($data);
