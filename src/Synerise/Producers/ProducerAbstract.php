@@ -64,6 +64,10 @@ abstract class ProducerAbstract
             $message['clientCustomId'] =  Client::getInstance()->getCustomIdetify();
         }
 
+        if(!empty(Client::getInstance()->getEmail())){
+            $message['email'] =  Client::getInstance()->getEmail();
+        }
+
 
         if(!empty(Client::getInstance()->getUuid())){
             $message['uuid'] =  Client::getInstance()->getUuid();
